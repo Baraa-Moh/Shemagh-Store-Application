@@ -3,6 +3,8 @@ require_once __DIR__.'/../Others/init.php';
 UserController::requireNonAdmin();
 $controller = new CartController();
 $controller->perform();
+// Hi there!
+
 ?>
 
 <!DOCTYPE html>
