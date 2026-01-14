@@ -4,8 +4,10 @@ require_once __DIR__.'/../Data/OrderData.php';
 require_once __DIR__.'/../Web/Others/init.php';
 
 class OrderController{
-    
-
+    private $orderServices;
+    public function __construct(){
+        $this->orderServices = new OrderServices();
+    }
     private function confirmOrder():void{
     
 
@@ -20,7 +22,7 @@ class OrderController{
     }
     
    
-    $order_id = OrderData::createOrder($user_id, $total);
+    $order_id = $this->orderServices->createOrder($user_id, $total);
     
     if(!$order_id) {
         return ;
@@ -54,7 +56,7 @@ public function perform(){
 private function cancelStatus(){
 
         $order_id = $_POST['order_id'];
-        OrderData::updateStatus($order_id, "cancelled");
+        $this->orderServices->updateOrderStatus($order_id, "cancelled");
         
         
         header("Location: " . $_SERVER['PHP_SELF']);
@@ -66,7 +68,7 @@ private function updateStatus() {
     $order_id = $_POST['order_id'];
     $new_status = $_POST['new_status'];
     
-    OrderData::updateStatus($order_id, $new_status);
+    $this->orderServices->updateOrderStatus($order_id, $new_status);
     
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();

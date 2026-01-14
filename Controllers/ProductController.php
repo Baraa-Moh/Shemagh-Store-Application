@@ -1,9 +1,13 @@
 <?php
 require_once __DIR__.'/../Web/Others/init.php';
-
+require_once __DIR__.'/../Business/ProductServices.php';
 
 class ProductController{
 
+    private ProducrtServices $productService;
+    public function __construct(){
+        $this->productService = new ProducrtServices();
+    }       
 public function perform(){
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit')
         $this->editProduct();
@@ -34,13 +38,11 @@ private function editProduct(){
         }
         
        
-        ProductData::editProductById($product_id, $name, $price1, $price2, $image);
+        $this->productService->editProductById($product_id, $name, $price1, $price2, $image);
         
         
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
-    
-    
 }
 private function deleteProduct() {
     //if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'delete') 
@@ -52,9 +54,8 @@ private function deleteProduct() {
         }
         
         
-        ProductData::deleteProductById($product_id);
+        $this->productService->deleteProductById($product_id);
         
-       
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     
@@ -72,11 +73,10 @@ public function addProduct() {
         if(empty($name) || $price1 <= 0 || empty($image)) {
             die('Invalid product data');
         }
-        
-        
-        ProductData::addProduct($name, $price1, $price2, $image);
-        
-        
+
+
+        $this->productService->addProduct($name, $price1, $price2, $image);
+
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     
