@@ -1,11 +1,15 @@
 <?php
 require_once __DIR__.'/../Data/CartData.php';
 require_once __DIR__.'/../Data/ProductData.php';
+require_once __DIR__.'/../Business/CartServices.php';
+require_once __DIR__.'/../Business/ProductServices.php';
 class CartController{
 
-
+    private CartServices $cartServices;
+    private ProductServices $productServices;
     public function __construct(){
-
+        $this->cartServices = new CartServices();
+        $this->productServices = new ProductServices();
     }
 
     public function perform(){
@@ -31,10 +35,10 @@ $productId = (int)$_POST['product_id'];
     $size = (int)$_POST['size'];
     $quantity = (int)$_POST['quantity'];
     
-    $product = ProductData::getProductById($productId);
+    $product = $this->productServices->getProductById($productId);
     
     if($product) {
-        CartData::addToCart($product, $quantity, $size);
+        $this->cartServices->addToCart($product, $quantity, $size);
     }
     
     header('Location: ' . $_SERVER['PHP_SELF']);
@@ -50,7 +54,7 @@ $productId = (int)$_POST['product_id'];
     }
     
     $item = $_SESSION['cart'][$index];
-    CartData::removeItem($item);
+    $this->cartServices->removeItem($item);
     
     header('Location: cart.php');
     exit;
